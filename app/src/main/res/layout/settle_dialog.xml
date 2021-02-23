@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="500dp"
+    android:layout_height="200dp"
+    android:layout_marginTop="50dp"
+    android:background="#FFF"
+    android:padding="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settle : Rs."
+                android:textColor="@color/text_color"
+                android:textSize="18dp"
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:hint="amount in RS"
+                android:textColor="@color/text_color"
+                android:inputType="numberDecimal"
+                android:id="@+id/settle_amount"
+                android:paddingRight="15dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To : "
+                android:textColor="@color/text_color"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="18dp"
+                android:textColor="@color/text_color"
+                android:id="@+id/settle_to"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:textSize="18dp"
+            android:id="@+id/settle_save_button"
+            android:textColor="@color/text_white"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="left"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginTop="15dp"/>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
