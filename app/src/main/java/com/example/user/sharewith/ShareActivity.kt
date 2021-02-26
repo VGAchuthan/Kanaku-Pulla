@@ -10,6 +10,7 @@ import android.database.Cursor
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -35,6 +36,7 @@ class ShareActivity : Activity() {
     lateinit var recyclerView : RecyclerView
     lateinit var pie : PieChart
     lateinit var chartDetailsLayout : LinearLayout
+    lateinit var amount : TextView
     companion object {
         var flag : Int = 1
         var historyTransaction = ArrayList<TranscationShare>()
@@ -49,13 +51,14 @@ class ShareActivity : Activity() {
         dbhelper = DBHelper(this,null)
        // userid : String = ""
         sharedPref = getSharedPreferences(LoginActivity.sharedPreFile, Context.MODE_PRIVATE)
+        amount  = findViewById<TextView>(R.id.chart_amount) as TextView
 
         userid = sharedPref.getString("MOBILE_KEY","DEFAULT")
 
         Toast.makeText(this,"welcome $userid",Toast.LENGTH_LONG).show()
         Log.e("user Count", "${Users.userMap.size}")
-        val recyclerView : RecyclerView = findViewById<RecyclerView>(R.id.recycler_view_share) as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL,false)
+        //val recyclerView : RecyclerView = findViewById<RecyclerView>(R.id.recycler_view_share) as RecyclerView
+        //recyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL,false)
 
        fillAdapter(userid)
         chartDetailsLayout = findViewById<LinearLayout>(R.id.chart_details_layout) as LinearLayout
@@ -82,7 +85,18 @@ class ShareActivity : Activity() {
                         "R",
                         (20f),
                         Color.parseColor("#FFA726")))*/
-
+        if(pie.innerValueSize.toInt() == -1)
+        {
+            Log.e("Pie"," Pie is null da ambi")
+        }
+        val temppie: PieChart = pie
+        if(chartDetailsLayout.childCount == 0)
+        {
+            Log.e("share activity on create","null chart details")
+            val chart_card : CardView = findViewById<CardView>(R.id.chart_card) as CardView
+            //chart_card.removeAllViews()
+            chart_card.visibility = View.GONE
+        }
         pie.startAnimation()
         /* fab.setOnClickListener {
 
@@ -132,34 +146,47 @@ class ShareActivity : Activity() {
         pie.clearChart()
         chartDetailsLayout.removeAllViews()
         var total = getTotalAmountOwe()
-        val groupedTransaction = ShareActivity.transact.groupBy {it.owner }
+        var groupedTransaction = ShareActivity.transact.groupBy {it.owner}
 
         for(groupTransaction in groupedTransaction.values){
             var model : PieModel
-            Log.e("group trans","${groupTransaction.first().owner}")
+            Log.e("in fill pie chart group trans","${groupTransaction.first().owner} : ${groupTransaction.size} : ${groupTransaction.first().amount}")
             var groupAmount : Double = 0.0
             for(value in groupTransaction)
             {
-                Log.e("\tin values","${value.owner} : ${value.balance}")
-                if(value.style == expenseStyle.LENDER)
+                Log.e("\tin values","${value.owner} : ${value.balance} : ${value.style} : ${value.contact.sharing_count}")
+                if(value.style == expenseStyle.LENDER && value.settle_flag == 0)
                 {
-                    groupAmount=+value.balance
-                    val random : Random = Random()
-                     model =  PieModel(
-                            groupTransaction.first().owner,
-                            ((groupAmount/total) * 100).toFloat() ,
-                            Color.argb(255,random.nextInt(256),random.nextInt(256),random.nextInt(256)  ))
-                    model.setShowLabel(true)
-                    model.value = ((groupAmount/total) * 100).toFloat()
-                    Log.e("chart model ", " ${model.value.toInt()} : ${model.legendLabel}")
-                    fillChartDetails(model)
-                    pie.addPieSlice(model)
+                    groupAmount+=value.balance
+
+
+                }
+                if(value.isGroup == 1 &&  value.style == expenseStyle.LENDER && value.settle_flag == 0 )
+                {
+                    groupAmount+=value.balance / value.contact.sharing_count
+                    groupAmount-=value.balance
 
                 }
 
 
 
             }
+           // if(groupTransaction != null || groupedTransaction.values.is)
+            //{
+                val random: Random = Random()
+                model = PieModel(
+                        groupTransaction.first().owner,
+                        ((groupAmount / total) * 100).toFloat(),
+                        Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256)))
+                model.setShowLabel(true)
+                model.value = ((groupAmount / total) * 100).toFloat()
+                Log.e("chart model ", " ${model.value.toInt()} : ${model.legendLabel}")
+                fillChartDetails(model)
+            if(model.value.toInt() !=0 ){
+                pie.addPieSlice(model)
+            }
+
+           // }
 
 
 
@@ -172,23 +199,30 @@ class ShareActivity : Activity() {
     fun fillChartDetails(pieModel : PieModel){
         //chartDetailsLayout
         Log.e("in chart pie details","${pieModel.value.toInt()}")
+        if(pieModel.value.toInt() != 0 ){
 
-        var chartChildLayout : LinearLayout = LinearLayout(this)
-        chartChildLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-        chartChildLayout.orientation = LinearLayout.HORIZONTAL
-        var view : View = View(this)
-        val colorIconparam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(40,40)
-        colorIconparam.setMargins(0,8,0,8)
-        view.layoutParams = colorIconparam
-        view.setBackgroundColor(pieModel.color)
-        val chartText : TextView = TextView(this)
-        val textParam:LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-        chartText.text= pieModel.value.toString() + " -> " + Users.userMap[pieModel.legendLabel]
-        chartText.layoutParams = textParam
-        chartText.setTextColor(resources.getColor(R.color.text_color))
-        chartChildLayout.addView(view)
-        chartChildLayout.addView(chartText)
-        chartDetailsLayout.addView(chartChildLayout)
+            var chartChildLayout: LinearLayout = LinearLayout(this)
+            chartChildLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            chartChildLayout.orientation = LinearLayout.HORIZONTAL
+            var view: View = View(this)
+            val colorIconparam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(40, 40)
+            colorIconparam.setMargins(0, 8, 0, 8)
+            view.layoutParams = colorIconparam
+            view.setBackgroundColor(pieModel.color)
+            val chartText: TextView = TextView(this)
+            val textParam: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            //(pieModel.value)*(amount.text.toString().toDouble())
+            //Math.round(pieModel.value).toString()
+            chartText.text = Math.round((((pieModel.value)*(amount.text.toString().toDouble()))/100.0)).toString() + " -> " + Users.userMap[pieModel.legendLabel]
+
+            pieModel.value.toFloat()
+
+            chartText.layoutParams = textParam
+            chartText.setTextColor(resources.getColor(R.color.text_color))
+            chartChildLayout.addView(view)
+            chartChildLayout.addView(chartText)
+            chartDetailsLayout.addView(chartChildLayout)
+        }
 
         /* for(share in ShareActivity.transact)
          {
@@ -208,9 +242,17 @@ class ShareActivity : Activity() {
         var total_amount : Double = 0.0
         for(share in ShareActivity.transact)
         {
-            if(share.style == expenseStyle.LENDER)
+            if(share.style == expenseStyle.LENDER){
             total_amount+= share.balance
+                if(share.isGroup == 1 )
+                {
+                    total_amount-= share.balance
+                    total_amount+=share.amount / share.contact.sharing_count
+                }
+            }
         }
+
+        amount.text = total_amount.toString()
         return total_amount
     }
     fun getAllTransact(userid : String): ArrayList<TranscationShare>{

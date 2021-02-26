@@ -116,6 +116,7 @@ class LoginActivity : Activity() {
                         if(cursor == null || cursor.count == -1)
                         {
                             Log.e("Bye","User not found by mobile")
+                            //Toast.makeText(this,"")
                         }
                         else{
                             val sharedPref : SharedPreferences = this.getSharedPreferences(sharedPreFile, Context.MODE_PRIVATE)
@@ -128,7 +129,7 @@ class LoginActivity : Activity() {
                             editor.putString("NAME_KEY",sharedName)
                             editor.apply()
                             editor.commit()
-                            val intent = Intent(this, ShareActivity::class.java)
+                            val intent = Intent(this, TabbedMainActivity::class.java)
                             startActivity(intent)
                             finish()
                         }

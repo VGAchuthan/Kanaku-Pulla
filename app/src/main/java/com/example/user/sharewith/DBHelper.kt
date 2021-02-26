@@ -124,9 +124,9 @@ class DBHelper (context : Context, factory: SQLiteDatabase.CursorFactory?) : SQL
         for(i in 1..share_count){
             if(i == 10)
             {
-                values.put("contact_10",contact_list.get(9))
+                values.put(COLUMN_TRANSACT_CONTACT_LIST_10,contact_list.get(9))
             }
-            values.put("contact_0"+"$i",contact_list.get(i-1))
+            values.put(COLUMN_TRANSACT_CONTACT_LIST_0+"$i",contact_list.get(i-1))
         }
         val newRowId = writeValues.insert(TABLE_TRANSACT_CONTACT,null, values)
         writeValues.close()
@@ -263,14 +263,15 @@ class DBHelper (context : Context, factory: SQLiteDatabase.CursorFactory?) : SQL
     fun checkIfUserAvailable(mobile : String) : Int{
         val db = this.readableDatabase
         Log.e("dei " , " db la la irundu da maapla")
-
-        if(db.rawQuery("SELECT * FROM $TABLE_SIGNUP WHERE $COLUMN_MOBILE = ?", arrayOf(mobile)) == null)
+        val cursor : Cursor = db.rawQuery("SELECT * FROM $TABLE_SIGNUP WHERE $COLUMN_MOBILE = ?", arrayOf(mobile))
+        if( cursor.count == 0)
         {
-            return 1
+            return 0
         }
 
 
-        return 0
+
+        return 1
     }
 
 

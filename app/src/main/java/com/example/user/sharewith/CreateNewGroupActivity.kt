@@ -77,7 +77,7 @@ class CreateNewGroupActivity : Activity() {
             if(view is EditText){
                 shareNum = view.text.substring(view.text.indexOf('(')+1,view.text.indexOf(')'))
 
-                listOfContacts.add(view.text.toString())
+                listOfContacts.add(shareNum)
                 Log.e("contatcs: ", "${view.text.toString()}")
             }
         }

@@ -7,6 +7,7 @@
     android:layout_gravity="center_vertical"
     android:background="@drawable/background2"
     android:orientation="vertical"
+    android:layout_marginBottom="4dp"
 
     tools:context="com.example.user.sharewith.ShareActivity">
 
@@ -21,62 +22,100 @@
         app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="8dp"
         android:layout_margin="8dp"
+        android:id="@+id/chart_card"
 
         >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-            <org.eazegraph.lib.charts.PieChart
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/piechart"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                android:layout_weight="1"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="16dp"
-
-                />
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="8dp">
             <LinearLayout
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <ScrollView
-                    android:layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold"
+                    android:text="My Pending Transaction "
+                    />
 
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:id="@+id/chart_details_layout"
-                        >
-
-
-
-
-
-
-                    </LinearLayout>
-
-
-                </ScrollView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:id="@+id/chart_amount"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_color"
+                    android:text=" Amount :"
+                    />
 
 
             </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+                <org.eazegraph.lib.charts.PieChart
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/piechart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:id="@+id/chart_details_layout"
+                            >
+
+
+
+
+
+
+                        </LinearLayout>
+
+
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
         </LinearLayout>
+
 
 
 
@@ -88,6 +127,10 @@
         android:id="@+id/recycler_view_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="8dp"
         >
 
 
